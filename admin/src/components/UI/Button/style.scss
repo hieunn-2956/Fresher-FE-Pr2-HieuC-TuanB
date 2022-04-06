@@ -1,0 +1,16 @@
+@import "../../../scss/variables.scss";
+@import "../../../scss/mixin.scss";
+
+.button {
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid $color-grey-light-1;
+  color: $color-white;
+  background-color: rgba($color-grey-dark-3, $alpha: 0.5);
+
+  &:hover {
+    color: $color-black;
+    background-color: rgba($color-secondary-light, $alpha: 0.5);
+    transform: scale(1.03);
+  }
+}

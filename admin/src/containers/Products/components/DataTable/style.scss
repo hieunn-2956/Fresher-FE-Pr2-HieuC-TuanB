@@ -1,0 +1,40 @@
+@import "../../../../scss/variables.scss";
+@import "../../../../scss/mixin.scss";
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  .table-row {
+    &:hover {
+      background-color: $color-grey-light-2;
+    }
+  }
+
+  button {
+    border: none;
+    background-color: inherit;
+  }
+
+  .table-btn {
+    &--detail {
+      color: $color-primary-dark;
+    }
+    &--delete {
+      color: $color-red;
+    }
+  }
+
+  .table-tags {
+    @include flex($justify: flex-start, $align: center, $gap: 1rem, $wrap: wrap);
+
+    .table-tag {
+      background-color: $color-secondary-light;
+      border-radius: 0.3rem;
+      padding: 0.2rem;
+    }
+  }
+}

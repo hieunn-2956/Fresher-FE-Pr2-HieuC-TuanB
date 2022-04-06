@@ -1,0 +1,47 @@
+@import "../../scss/variables.scss";
+@import "../../scss/mixin.scss";
+
+header {
+  @include flex($justify: space-between, $align: center);
+  min-height: 4rem;
+  margin-left: $sidebar-width;
+  padding: 0 2rem;
+
+  .header-menu {
+    @include flex($justify: flex-end, $align: center, $gap: 1.5rem);
+  }
+
+  .header-welcome {
+    span {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .header-search {
+    @include flex($justify: center, $align: center);
+    padding: 0.5rem 0.8rem;
+    background-color: $color-grey-light-2;
+    border-radius: 0.5rem;
+
+    input {
+      border: none;
+      background-color: inherit;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    svg {
+      color: $color-grey-dark;
+    }
+
+    button {
+      border: none;
+      color: $color-black;
+      background-color: $color-white;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.5rem;
+    }
+  }
+}

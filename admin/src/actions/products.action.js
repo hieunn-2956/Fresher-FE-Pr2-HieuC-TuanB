@@ -83,3 +83,45 @@ export const deleteProductRequest = (productId) => {
     payload: productId,
   };
 };
+
+export const getTopSalesSuccess = (data) => {
+  return {
+    type: productsConstant.GET_TOP_SALE_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getTopSalesFailure = (error) => {
+  return {
+    type: productsConstant.GET_TOP_SALE_FAILURE,
+    payload: error,
+  };
+};
+
+export const getTopSalesRequest = (payload) => {
+  return {
+    type: productsConstant.GET_TOP_SALE_REQUEST,
+    payload: payload,
+  };
+};
+
+export const getPopTagSuccess = (data) => {
+  return {
+    type: productsConstant.GET_POP_TAG_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getPopTagFailure = (error) => {
+  return {
+    type: productsConstant.GET_POP_TAG_FAILURE,
+    payload: error,
+  };
+};
+
+export const getPopTagRequest = (payload) => {
+  return {
+    type: productsConstant.GET_POP_TAG_REQUEST,
+    payload: payload,
+  };
+};

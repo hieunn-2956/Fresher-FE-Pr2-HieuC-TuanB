@@ -28,6 +28,9 @@ export default function Layout(props) {
                   <li>
                     <NavLink to={"/products"}>Product</NavLink>
                   </li>
+                  <li>
+                    <NavLink to={"/orders"}>Order</NavLink>
+                  </li>
                 </ul>
                 <div className='sidebar-footer'>
                   <h3>Profile</h3>

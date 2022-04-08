@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { BsPin, BsFillCheckCircleFill } from "react-icons/bs";
 import { useTable, usePagination, useRowSelect } from "react-table";
 import { Button } from "react-bootstrap";
+import FormatDate from "../../../../components/UI/FormatDate";
 
 import "./style.scss";
 
@@ -13,10 +14,7 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -123,20 +121,12 @@ function App(props) {
         Header: "Name",
         columns: [
           {
-            Header: " Avatar",
-            accessor: "avatar",
+            Header: " Select",
+            accessor: "select",
           },
           {
-            Header: " Name",
-            accessor: "name",
-          },
-          {
-            Header: "Listed Price",
-            accessor: "listedPrice",
-          },
-          {
-            Header: "Discount Price",
-            accessor: "discountPrice",
+            Header: " OrderBy",
+            accessor: "orderBy",
           },
         ],
       },
@@ -144,85 +134,90 @@ function App(props) {
         Header: "Info",
         columns: [
           {
-            Header: "Quantity",
-            accessor: "quantity",
+            Header: "Total Amount",
+            accessor: "totalAmount",
           },
           {
-            Header: (
-              <div>
-                <p>Is Hot</p>
-                <BsPin style={{ cursor: "pointer" }} />
-              </div>
-            ),
-            accessor: "is_hot",
+            Header: "Total Item",
+            accessor: "totalItem",
           },
           {
-            Header: (
-              <div>
-                <p>In Slider</p>
-                <BsPin style={{ cursor: "pointer" }} />
-              </div>
-            ),
-            accessor: "in_slider",
-          },
-          {
-            Header: "Tags",
-            accessor: "tags",
+            Header: "Type",
+            accessor: "paymentType",
           },
         ],
       },
       {
-        Header: "Details",
+        Header: "Update",
         columns: [
           {
-            Header: "Details",
-            accessor: "update",
+            Header: "Status",
+            accessor: "status",
           },
           {
-            Header: "Delete",
-            accessor: "delete",
+            Header: (
+              <div style={{ padding: "0 50px", boxSizing: "border-box" }}>
+                <p>CreatedAt</p>
+                <select
+                  onClick={(e) => console.log(e.target.value)}
+                  style={{ border: "0.5px solid gray", borderRadius: "4px" }}
+                >
+                  <option value={""}>Sort by</option>
+                  <option value={-1}>Newest</option>
+                  <option value={1}>Oldest</option>
+                </select>
+              </div>
+            ),
+            accessor: "createdAt",
+          },
+          {
+            Header: "UpdatedAt",
+            accessor: "updatedAt",
+          },
+          {
+            Header: "Details",
+            accessor: "details",
           },
         ],
       },
     ],
     []
   );
+
+  const renderStatus = (status) => {
+    if (status === "completed") {
+      return <p style={{ color: "green" }}>{status}</p>;
+    } else if (status === "in_progress") {
+      return <p style={{ color: "blue" }}>{status}</p>;
+    } else if (status === "ordered") {
+      return <p style={{ color: "orange" }}>{status}</p>;
+    } else if (status === "cancelled") {
+      return <p style={{ color: "gray" }}>{status}</p>;
+    }
+  };
   const makeData = (data) => {
-    return data.map((product) => {
+    return data.map((order) => {
       return {
-        ...product,
-        avatar: (
-          <img
-            className='avatar'
-            src={product.avatar}
-            style={{ width: "10rem", height: "6rem", objectFit: "cover" }}
+        ...order,
+        select: (
+          <input
+            type='checkbox'
+            id={order._id}
+            name={order._id}
+            value={order._id}
+            onChange={console.log("as")}
           />
         ),
-        tags: (
-          <div className='table-tags'>
-            {product.tags.map((tag) => (
-              <span className='table-tag'>{tag}</span>
-            ))}
-          </div>
+        status: renderStatus(order.status),
+        orderBy: order.user.email,
+        totalItem: order.items
+          .map((item) => item.purchaseQty)
+          .reduce((a, b) => a + b),
+        details: (
+          <Button onClick={() => props.getDetails(order)}>Details</Button>
         ),
-        is_hot: product.is_hot ? <BsFillCheckCircleFill /> : "",
-        in_slider: product.in_slider ? <BsFillCheckCircleFill /> : "",
-        update: (
-          <Button
-            className='table-btn--detail'
-            onClick={() => props.getProductDetails(product)}
-          >
-            Details
-          </Button>
-        ),
-        delete: (
-          <Button
-            className='table-btn--delete'
-            onClick={() => props.deleteProduct(product._id)}
-          >
-            Delete
-          </Button>
-        ),
+        updatedAt: <FormatDate date={order.updatedAt} />,
+        createdAt: <FormatDate date={order.createdAt} />,
       };
     });
   };

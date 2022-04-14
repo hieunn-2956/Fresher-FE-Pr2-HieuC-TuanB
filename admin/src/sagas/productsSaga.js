@@ -11,8 +11,10 @@ import {
   ADD_PRODUCTS_SUCCESS,
   DELETE_PRODUCTS_REQUEST,
   DELETE_PRODUCTS_SUCCESS,
+  GET_POP_TAG_REQUEST,
   GET_PRODUCTS_REQUEST,
   GET_PRODUCT_BY_ID_REQUEST,
+  GET_TOP_SALE_REQUEST,
   UPDATE_PRODUCTS_REQUEST,
   UPDATE_PRODUCTS_SUCCESS,
 } from "../actions/constant";
@@ -27,6 +29,10 @@ import {
   deleteProductFailure,
   getProductByIdSuccess,
   getProductByIdFailure,
+  getTopSalesSuccess,
+  getTopSalesFailure,
+  getPopTagSuccess,
+  getPopTagFailure,
 } from "../actions";
 import axiosInstance from "../helper/axios";
 
@@ -62,6 +68,20 @@ const updateExistedProduct = async (payload) => {
 const deleteExistedProduct = async (payload) => {
   const { productId } = payload;
   const res = await axiosInstance.delete(`/product/admin/${productId}`);
+};
+
+const getTopSales = async (payload) => {
+  const response = await axiosInstance.post("summary/getBestSalesProduct", {
+    ...payload,
+  });
+  return { topSales: response.data.results };
+};
+
+const getPopTags = async (payload) => {
+  const response = await axiosInstance.post("summary/getPopulateTags", {
+    ...payload,
+  });
+  return { popTags: response.data.results };
 };
 
 export function* getProductsByQuery({ payload }) {
@@ -112,6 +132,24 @@ export function* deleteProduct({ payload }) {
   }
 }
 
+export function* getTopSalesProduct({ payload }) {
+  try {
+    const topSales = yield getTopSales(payload);
+    yield put(getTopSalesSuccess(topSales));
+  } catch (error) {
+    yield put(getTopSalesFailure(error));
+  }
+}
+
+export function* getPopularTag({ payload }) {
+  try {
+    const popTags = yield getPopTags(payload);
+    yield put(getPopTagSuccess(popTags));
+  } catch (error) {
+    yield put(getPopTagFailure(error));
+  }
+}
+
 export function* onLoadingProducts() {
   yield takeEvery(GET_PRODUCTS_REQUEST, getProductsByQuery);
 }
@@ -135,6 +173,14 @@ export function* onDeleteProduct() {
   yield takeEvery(DELETE_PRODUCTS_SUCCESS, getProductsByQuery);
 }
 
+export function* onLoadingTopSales() {
+  yield takeLatest(GET_TOP_SALE_REQUEST, getTopSalesProduct);
+}
+
+export function* onLoadingPopTag() {
+  yield takeLatest(GET_POP_TAG_REQUEST, getPopularTag);
+}
+
 export function* productsSaga() {
   yield all([
     call(onLoadingProducts),
@@ -142,5 +188,7 @@ export function* productsSaga() {
     call(onAddingProduct),
     call(onUpdateProduct),
     call(onDeleteProduct),
+    call(onLoadingTopSales),
+    call(onLoadingPopTag),
   ]);
 }

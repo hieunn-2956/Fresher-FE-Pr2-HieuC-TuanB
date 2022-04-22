@@ -27,6 +27,7 @@ import {
   updateOrdersSuccess,
 } from "../actions";
 import axiosInstance from "../helper/axios";
+import toast from "react-hot-toast";
 
 const getOrder = (state) => state.orders;
 
@@ -41,7 +42,8 @@ const getOrderById = async (orderId) => {
 };
 
 const updateOrder = async (payload) => {
-  await axiosInstance.put("order/admin/update", payload);
+  const response = await axiosInstance.put("order/admin/update", payload);
+  return { message: response.data.message };
 };
 
 const fetchSalesByDay = async (payload) => {
@@ -81,10 +83,13 @@ export function* getOrderDetails({ payload: orderId }) {
 
 export function* updateCustomerOrder({ payload }) {
   try {
-    yield updateOrder(payload);
+    const { message } = yield updateOrder(payload);
     yield put(updateOrdersSuccess());
+    toast.success(message);
   } catch (error) {
+    const { response } = error;
     yield put(updateOrdersFailure(error));
+    toast.error(response.data.error);
   }
 }
 export function* getSalesByDay({ payload }) {

@@ -9,6 +9,7 @@ import {
 import { KEEP_LOGIN, LOGIN_REQUEST, LOG_OUT } from "../actions/constant";
 import { loginSuccess, loginFailure } from "../actions";
 import axiosInstance from "../helper/axios";
+import toast from "react-hot-toast";
 
 const logIn = async (user) => {
   const response = await axiosInstance.post("/admin/login", {
@@ -25,9 +26,12 @@ export function* logInWithCredentials({ payload: { email, password } }) {
   try {
     const user = yield logIn({ email, password });
     yield put(loginSuccess(user));
+    toast.success("Logged In");
     localStorage.setItem("token", user.token);
     localStorage.setItem("user", JSON.stringify(user.user));
   } catch (error) {
+    const { response } = error;
+    toast.error(`${response.data.error}`);
     yield put(loginFailure(error));
   }
 }

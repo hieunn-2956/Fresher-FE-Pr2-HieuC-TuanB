@@ -36,6 +36,8 @@ import {
 } from "../actions";
 import axiosInstance from "../helper/axios";
 
+import toast from "react-hot-toast";
+
 const getProduct = (state) => state.products;
 
 const getProducts = async (query) => {
@@ -54,15 +56,17 @@ const getProductById = async (productId) => {
 };
 
 const addProduct = async (payload) => {
-  await axiosInstance.post("product/admin/create", {
+  const response = await axiosInstance.post("product/admin/create", {
     ...payload,
   });
+  return response.data.message;
 };
 
 const updateExistedProduct = async (payload) => {
-  await axiosInstance.put("/product/admin/update", {
+  const response = await axiosInstance.put("/product/admin/update", {
     ...payload,
   });
+  return response.data.message;
 };
 
 const deleteExistedProduct = async (payload) => {
@@ -107,19 +111,25 @@ export function* getProductDetailsById({ payload }) {
 
 export function* addNewProduct({ payload }) {
   try {
-    yield addProduct(payload);
+    const message = yield addProduct(payload);
     yield put(addProductsSuccess());
+    toast.success(message);
   } catch (error) {
+    const { response } = error;
     yield put(addProductsFailure(error));
+    toast.error(response.data.message);
   }
 }
 
 export function* updateProduct({ payload }) {
   try {
-    yield updateExistedProduct(payload);
+    const message = yield updateExistedProduct(payload);
     yield put(updateProductsSuccess());
+    toast.success(message);
   } catch (error) {
+    const { response } = error;
     yield put(updateProductsFailure(error));
+    toast.error(response.data.message);
   }
 }
 

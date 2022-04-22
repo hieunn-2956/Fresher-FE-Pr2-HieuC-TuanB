@@ -13,6 +13,7 @@ import "./App.scss";
 import { useEffect } from "react";
 import AdminManager from "./pages/Admin";
 import EditAdmin from "./pages/Admin/EditAdmin";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function App() {
 
   return (
     <div className='App'>
+      <Toaster position='top-center' reverseOrder={false} />
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path='/' element={<Home />} />
